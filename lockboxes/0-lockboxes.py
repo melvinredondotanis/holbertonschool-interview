@@ -13,6 +13,6 @@ def canUnlockAll(boxes):
         key = keys.pop()
         if 0 <= key < n and not unlocked[key]:
             unlocked[key] = True
-            keys.extend([k for k in boxes[key] if not unlocked[k] if 0 <= k < n])
+            keys.extend([k for k in boxes[key] if 0 <= k < n and not unlocked[k]])
     
     return all(unlocked)
