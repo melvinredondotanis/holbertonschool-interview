@@ -11,17 +11,15 @@ def minOperations(n):
         int: The fewest number of operations needed to result
         in exactly n H characters in the file.
     """
+    if n <= 1:
+        return 0
+        
     operations = 0
-    summation = 1
-    carrier = 0
- 
-    while summation < n:
-        if n % summation == 0:
-            carrier = summation
-            summation *= 2
-            operations += 1
-        else:
-            summation += carrier
-        operations += 1
-
+    i = 2
+    while i <= n:
+        while n % i == 0:
+            operations += i
+            n //= i
+        i += 1
+    
     return operations
