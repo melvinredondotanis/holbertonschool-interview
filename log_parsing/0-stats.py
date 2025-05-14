@@ -24,14 +24,19 @@ if __name__ == "__main__":
     try:
         for line in stdin:
             args = line.split(" ")
-            if len(args) != 9:
-                pass
-            if args[-2] in list_status_codes:
-                status_codes[args[-2]] += 1
-            if args[-1][-1] == '\n':
-                args[-1][:-1]
+            if len(args) < 2:
+                continue
 
-            total_size += int(args[-1])
+            try:
+                if args[-2] in list_status_codes:
+                    status_codes[args[-2]] += 1
+
+                if args[-1][-1] == '\n':
+                    args[-1] = args[-1][:-1]
+
+                total_size += int(args[-1])
+            except (IndexError, ValueError):
+                continue
             count += 1
             if count % 10 == 0:
                 print(f"File size: {total_size}")
