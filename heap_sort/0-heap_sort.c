@@ -1,5 +1,4 @@
 #include "sort.h"
-
 /**
  * heap_sort - uses heapify sift-down to sort A in-place
  * @A: A to sort in-place
@@ -7,16 +6,14 @@
  */
 void heap_sort(int *A, size_t size)
 {
+	size_t len = size;
+
 	if (size < 2)
 		return;
-
 	heapify(A, size);
-
-	for (size_t len = size; len > 1; --len)
-	{
-		swap(A, 0, len - 1, size);
-		sift_down(A, 0, len - 1);
-	}
+	while (len > 1)
+		swap(A, 0, len - 1, size),
+			sift_down(A, 0, --len, size);
 }
 
 /**
@@ -26,8 +23,10 @@ void heap_sort(int *A, size_t size)
  */
 void heapify(int *A, size_t size)
 {
-	for (ssize_t start = UP(size - 1); start >= 0; --start)
-		sift_down(A, start, size);
+	ssize_t start = UP(size - 1);
+
+	while (start >= 0)
+		sift_down(A, start--, size, size);
 }
 
 /**
@@ -35,27 +34,24 @@ void heapify(int *A, size_t size)
  * @A: pointer to array
  * @start: starting index
  * @len: current length of heap
+ * @size: size of array
  */
-void sift_down(int *A, size_t start, size_t len)
+void sift_down(int *A, size_t start, size_t len, size_t size)
 {
-	size_t root = start;
+	size_t root = start, temp = root;
 
 	while (LEFT(root) < len)
 	{
-		size_t child = LEFT(root);
-		size_t swap_idx = root;
-
-		if (A[child] > A[swap_idx])
-			swap_idx = child;
-
-		if (child + 1 < len && A[child + 1] > A[swap_idx])
-			swap_idx = child + 1;
-
-		if (swap_idx == root)
+		temp = root;
+		if (A[LEFT(root)] > A[root])
+			temp = LEFT(root);
+		if (RIGHT(root) < len &&
+			A[RIGHT(root)] > A[temp])
+			temp = RIGHT(root);
+		if (temp == root)
 			break;
-
-		swap(A, root, swap_idx, len);
-		root = swap_idx;
+		swap(A, root, temp, size);
+		root = temp;
 	}
 }
 
@@ -66,13 +62,11 @@ void sift_down(int *A, size_t start, size_t len)
  * @b: index of second element
  * @size: size of array
  */
-void swap(int *A, size_t a, size_t b, size_t size)
+inline void swap(int *A, size_t a, size_t b, size_t size)
 {
-	if (a != b)
-	{
-		int temp = A[a];
-		A[a] = A[b];
-		A[b] = temp;
-		print_array(A, size);
-	}
+	int temp = A[a];
+
+	A[a] = A[b];
+	A[b] = temp;
+	print_array(A, size);
 }
